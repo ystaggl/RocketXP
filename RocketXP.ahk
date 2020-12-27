@@ -3,7 +3,7 @@ CoordMode, Mouse, Screen
 Uncalibrated := ["Challenge", "Event", "Claim", "Join", "Join2", "Finish"]
 Mode := 0
 ClaimAmount := 10
-
+AddHotkeys := 0
 NormalStart:
 	; Creates a GUI with a checkbox for whether the user is the XP Gainer or the Forfeiter
 	Gui, New, 
@@ -57,22 +57,38 @@ return
 return
 
 Submit:
-	Clipboard = %AddHotkeys%
 	Gui, Submit
+	Clipboard = %AddHotkeys%
 	StartLength *= 1000
 	EndLength *= 1000
 	JoinLength *= 1000
 	LeaveLength *= 1000
 	GuiSubmit := 1
+	
+	Switch AddHotkeys {
+	Case 1: 
+	Hotkey, ^+p, Prestart
+	Hotkey, ^+c, Calibration
+	Hotkey, ^+g, Game
+	Hotkey, ^+q, PostGame
+	Hotkey, ^+f, Forfeit
+	Hotkey, ^+r, RewardClaim
+	Hotkey, ^+l, Leave
+	Default:
+	Hotkey, ^+p, Terminate
+	Hotkey, ^+g, Terminate
+	Hotkey, ^+q, Terminate
+	Hotkey, ^+f, Terminate
+	Hotkey, ^+r, Terminate
+	Hotkey, ^+l, Terminate
+	}
+return
+
+Terminate:
 return
 
 PreStart:
-	Clipboard = %AddHotkeys%
-	Gui, Submit
-	StartLength *= 1000
-	EndLength *= 1000
-	JoinLength *= 1000
-	LeaveLength *= 1000
+Gosub, Submit
 	Switch (Mode) {
 	Case 1:
 		Gosub, Calibration
@@ -87,6 +103,7 @@ PreStart:
 return
 
 Calibration:
+Clipboard := "Test"
 	UncalibratedCount := Uncalibrated.Count()
 	While (UncalibratedCount != 0) {
 		MouseGetPos, ToolTipX, ToolTipY
@@ -160,7 +177,7 @@ PostGame:
 	; End the Game
 	Switch Mode {
 		Case 1:
-			Sleep, 700
+			Sleep, 800
 		Case 2:
 			Gosub, Forfeit
 	}
@@ -174,13 +191,14 @@ PostGame:
 				Gosub, RewardClaim
 			Case 2:
 				Sleep, %LeaveLength%
-				Sleep, 5000
+				Sleep, 5100
 		}
 		Sleep, %JoinLength%
 	}
 	
 	; Ready Up
 	ControlFocus,,Rocket League
+	controlsend,,{Enter},Rocket League
 	controlsend,,{Enter},Rocket League
 	Sleep, %StartLength%
 return
@@ -190,6 +208,8 @@ return
 Forfeit:
 	ControlFocus,,Rocket League
 	controlsend,,{Escape},Rocket League
+	Sleep,100
+	controlsend,,{Down},Rocket League
 	Sleep,100
 	controlsend,,{Down},Rocket League
 	Sleep,100
@@ -249,6 +269,8 @@ return
 
 Leave:
 	ControlFocus,,Rocket League
+	controlsend,,{Down},Rocket League
+	Sleep, 100
 	controlsend,,{Down},Rocket League
 	Sleep, 100
 	controlsend,,{Down},Rocket League
