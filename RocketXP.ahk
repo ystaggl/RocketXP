@@ -12,6 +12,7 @@ IniRead, dJoinLength, RocketXP.ini, Settings, JoinLength, 20
 IniRead, dLeaveLength, RocketXP.ini, Settings, LeaveLength, 10
 IniRead, dDelay, RocketXP.ini, Delay, Delay, 0
 IniRead, dMatchDelay, RocketXP.ini, Delay, MatchDelay, 0
+IniRead, SetClicks, RocketXP.ini, Clicks, SetClicks, 0
 Uncalibrated := ["Challenge", "Event", "Claim", "Friend", "Join", "Finish"]
 Games := 0
 
@@ -43,12 +44,67 @@ NormalStart:
 	Gui, Add, Text, Center, Match Time Adjustment (In Milliseconds)
 	Gui, Add, Edit
 	gui, Add, UpDown, vMatchDelay Range-1000-1000, %dMatchDelay%
-	Gui, Add, Button, Default w80 gPreStart, Submit
-	Gui, Add, Button, w80 gWarn, Set Default
-	Gui, Add, Button, w80 gPreIniMake, Create INI File
+	Gui, Add, Button, x9 y405 Default w80 gPreStart, Submit
+	Gui, Add, Button, x9 y435 w80 gWarn, Set Default
+	Gui, Add, Button, x+9 y435 w80 gPreIniMake, Create INI File
+	Gui, Add, Button, x+9 y435 w80 gDefaultClicks, Set Clicks
 	Gui, Show
 	return	
 
+DefaultClicks:
+	Gui, New
+	Gui, Add, Button, w80 gResetClicks, Reset Clicks
+	Gui, Add, Button, w80 gSetClicks, Set Clicks
+	Gui, Show
+	return
+
+ResetClicks:
+	Gui, Submit
+	IniWrite, 0, RocketXP.ini, Clicks, SetClicks
+	return
+
+SetClicks:
+	Gui, Submit
+	IniWrite, 1, RocketXP.ini, Clicks, SetClicks
+	Uncalibrated := ["Challenge", "Event", "Claim", "Friend", "Join"]
+	UncalibratedCount := Uncalibrated.Count()
+		While (UncalibratedCount != 0) {
+			MouseGetPos, ToolTipX, ToolTipY
+			ToolTipY += 20
+			CurrentCalibration := Uncalibrated[1]
+			Switch (CurrentCalibration) {
+				Case "Challenge":
+					ToolTip, Hover over the "View Challenges" Button and Press (Ctrl+Shift+B), %ToolTipX%, %ToolTipY%
+				Case "Event":
+					ToolTip, Hover over the Event Panel in the Challenge Menu and Press (Ctrl+Shift+B), %ToolTipX%, %ToolTipY%
+				Case "Claim":
+					ToolTip, Hover over the Claim Button (or where it would be) for the reward you want to farm and Press (Ctrl+Shift+B), %ToolTipX%, %ToolTipY%
+				Case "Friend":
+					ToolTip, Hover over the the Forfeiter in your steam friends and Press (Ctrl+Shift+B), %ToolTipX%, %ToolTipY%
+				Case "Join":
+					ToolTip, Hover over the "Join Game" (or "Launch Game" if join game isn't visible) Button and Press (Ctrl+Shift+B), %ToolTipX%, %ToolTipY%
+			}
+		}
+	Gui, New
+	Gui, Add, Text, Center, Click Positions have been set
+	Gui, Add, Button, Default w80 gClicksFinished, OK
+	Gui, Show
+	return
+		
+ClicksFinished:
+	Gui, Submit
+	IniWrite, %ChallengeX%, RocketXP.ini, Clicks, ChallengeX
+	IniWrite, %ChallengeY%, RocketXP.ini, Clicks, ChallengeY
+	IniWrite, %EventX%, RocketXP.ini, Clicks, EventX
+	IniWrite, %EventY%, RocketXP.ini, Clicks, EventY
+	IniWrite, %ClaimX%, RocketXP.ini, Clicks, ClaimX
+	IniWrite, %ClaimY%, RocketXP.ini, Clicks, ClaimY
+	IniWrite, %FriendX%, RocketXP.ini, Clicks, FriendX
+	IniWrite, %FriendY%, RocketXP.ini, Clicks, FriendY
+	IniWrite, %JoinX%, RocketXP.ini, Clicks, JoinX
+	IniWrite, %JoinY%, RocketXP.ini, Clicks, JoinY
+	return
+	
 GuiClose:
 	ExitApp
 	return
@@ -76,7 +132,7 @@ IniMake:
 	IniWrite, 10, RocketXP.ini, Settings, LeaveLength
 	IniWrite, 0, RocketXP.ini, Delay, Delay
 	IniWrite, 0, RocketXP.ini, Delay, MatchDelayss
-return
+	return
 
 Warn:
 	Gui, New
@@ -84,7 +140,7 @@ Warn:
 	Gui, Add, Button, w80 gCommit, Yes
 	Gui, Add, Button, w80 y+0 gCancel, No
 	Gui, Show
-return
+	return
 
 Commit:
 	Gui, Submit
@@ -97,7 +153,7 @@ Commit:
 	IniWrite, %LeaveLength%, RocketXP.ini, Settings, LeaveLength
 	IniWrite, %Delay%, RocketXP.ini, Settings, Delay
 	IniWrite, %MatchDelay%, RocketXP.ini, Settings, MatchDelay
-return
+	return
 
 ^!a::
 	GuiSubmit := 0
@@ -137,6 +193,19 @@ return
 
 Submit:
 	Gui, Submit
+	IniRead, SetClicks, RocketXP.ini, Clicks, SetClicks, 0
+	If (SetClicks = 1) {
+		IniRead, ChallengeX, RocketXP.ini, Clicks, ChallengeX
+		IniRead, ChallengeY, RocketXP.ini, Clicks, ChallengeY
+		IniRead, EventX, RocketXP.ini, Clicks, EventX
+		IniRead, EventY, RocketXP.ini, Clicks, EventY
+		IniRead, ClaimX, RocketXP.ini, Clicks, ClaimX
+		IniRead, ClaimY, RocketXP.ini, Clicks, ClaimY
+		IniRead, FriendX, RocketXP.ini, Clicks, FriendX
+		IniRead, FriendY, RocketXP.ini, Clicks, FriendY
+		IniRead, JoinX, RocketXP.ini, Clicks, JoinX
+		IniRead, JoinY, RocketXP.ini, Clicks, JoinY
+	}
 	SleepLength := 5000 + Delay
 	StartLength *= 1000
 	EndLength *= 1000
@@ -167,7 +236,10 @@ Terminate:
 	return
 
 PreStart:
-Gosub, Submit
+	Gosub, Submit
+	If (SetClicks = 1) {
+		Uncalibrated := ["Finish"]
+	}
 	Switch (Mode) {
 	Case 1:
 		Gosub, Calibration
@@ -243,6 +315,7 @@ Game:
 		}
 		Gosub, PostGame
 	}	
+	
 PostGame:
 	; End the Game
 	Switch Mode {
