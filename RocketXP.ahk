@@ -5,18 +5,18 @@ Mode := 0
 ClaimAmount := 10
 
 NormalStart:
-	Gui, Submit
 	; Creates a GUI with a checkbox for whether the user is the XP Gainer or the Forfeiter
 	Gui, New, 
+	Gui, Add, Checkbox, vAddHotkeys, Testing Mode
 	Gui, Add, Text, Center, I am the
 	Gui, Add, Radio, vMode, XP Gainer
 	Gui, Add, Radio,, Forfeiter
 	Gui, Add, Text, Center, How many Games are required for the challenge?
 	Gui, Add, Edit
-	Gui, Add, UpDown, vClaimAmount Range1-100, 25
+	Gui, Add, UpDown, vClaimAmount Range1-100, 10
 	Gui, Add, Text, Center, Time Between Ready and Timer Start (in Seconds)
 	Gui, Add, Edit
-	Gui, Add, UpDown, vStartLength Range1-100, 20
+	Gui, Add, UpDown, vStartLength Range1-100, 25
 	Gui, Add, Text, Center, Time Between End Game and Ready Available (In Seconds)
 	Gui, Add, Edit
 	Gui, Add, UpDown, vEndLength Range1-100, 20
@@ -29,8 +29,45 @@ NormalStart:
 	Gui, Add, Button, Default w80 gPreStart, Submit
 	Gui, Show
 return	
+
+^!a::
+	GuiSubmit := 0
+	Gui, New,
+	Gui, Add, Checkbox, vAddHotkeys, Testing Mode
+	Gui, Add, Text, Center, How many Games are required for the challenge?
+	Gui, Add, Edit
+	Gui, Add, UpDown, vClaimAmount Range1-100, 10
+	Gui, Add, Text, Center, Time Between Ready and Timer Start (in Seconds)
+	Gui, Add, Edit
+	Gui, Add, UpDown, vStartLength Range1-100, 25
+	Gui, Add, Text, Center, Time Between End Game and Ready Available (In Seconds)
+	Gui, Add, Edit
+	Gui, Add, UpDown, vEndLength Range1-100, 20
+	Gui, Add, Text, Center, How long between Join Game and Ready Available (In Seconds)
+	Gui, Add, Edit
+	Gui, Add, UpDown, vJoinLength Range1-100, 20
+	Gui, Add, Text, Center, How long to leave match (In Seconds)
+	Gui, Add, Edit
+	Gui, Add, UpDown, vLeaveLength Range1-100, 10
+	Gui, Add, Button, Default w80 gSubmit, Submit
+	Gui, Show
+	While (GuiSubmit = 0) {
 	
+	}
+return
+
+Submit:
+	Clipboard = %AddHotkeys%
+	Gui, Submit
+	StartLength *= 1000
+	EndLength *= 1000
+	JoinLength *= 1000
+	LeaveLength *= 1000
+	GuiSubmit := 1
+return
+
 PreStart:
+	Clipboard = %AddHotkeys%
 	Gui, Submit
 	StartLength *= 1000
 	EndLength *= 1000
