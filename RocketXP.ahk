@@ -181,25 +181,33 @@ click, %ChallengeX%, %ChallengeY%
 click, %EventX%, %EventY%
 click, %ClaimX%, %ClaimY%
 WinActivate, %PrevTitle%
-Sleep, 2000
+Sleep, 3250
+controlsend,,{Right},Rocket League
+Sleep, 250
 controlsend,,{Enter},Rocket League
-Sleep, 500
+Sleep, 250
+controlsend,,{Right},Rocket League
+Sleep, 250
 controlsend,,{Enter},Rocket League
-Sleep, 500
+Sleep, 250
+controlsend,,{Right},Rocket League
+Sleep, 250
+controlsend,,{Enter},Rocket League
+Sleep, 250
+controlsend,,{Right},Rocket League
+Sleep, 250
+controlsend,,{Enter},Rocket League
+Sleep, 250
 controlsend,,{Esc},Rocket League
-Sleep, 500
+Sleep, 250
 controlsend,,{Esc},Rocket League
-Sleep, 500
-controlsend,,{Esc},Rocket League
-Sleep, 500
-controlsend,,{Esc},Rocket League
-Sleep, 500
-controlsend,,{Esc},Rocket League
-Sleep, 500
+
 WinActivate, Friends List
-Sleep, 5000
+Sleep, 4750
 Click, %FriendX%, %FriendY%, right
-Sleep, 5000
+Sleep, 4750
+MouseMove, %JoinX%, %JoinY%
+Sleep, 500
 Click, %JoinX%, %JoinY%
 WinActivate, %PrevTitle%
 Sleep, 3000
