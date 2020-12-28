@@ -187,7 +187,7 @@ PostGame:
 				Gosub, RewardClaim
 			Case 2:
 				Sleep, %LeaveLength%
-				Sleep, 10100
+				Sleep, 15000
 		}
 		Sleep, %JoinLength%
 	}
@@ -294,7 +294,7 @@ RewardClaim:
 	WinGetActiveTitle, PrevTitle
 	WinActivate,Friends List
 	MouseMove, %FriendX%, %FriendY%
-	Sleep, 2500
+	Sleep, 7400
 	Click, %FriendX%, %FriendY%, RIGHT
 	MouseMove, %JoinX%, %JoinY%
 	Sleep, 2750
