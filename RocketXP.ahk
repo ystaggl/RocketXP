@@ -180,7 +180,7 @@ PostGame:
 	
 	; Claim Rewards
 	Games++
-	If (Games = %ClaimAmount%) {
+	If (Games = ClaimAmount) {
 		Games := 0
 		Switch Mode {
 			Case 1:
